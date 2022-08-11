@@ -23,7 +23,7 @@ function checkOverlength(
 		return;
 	}
 	console.log("Checking: " + document.uri.toString());
-	let config = vscode.workspace.getConfiguration('line-length-highlighter');
+	let config = vscode.workspace.getConfiguration('line-length-checker');
 	let max = config.lineLength;
 	let i = 0;
 	let diags: vscode.Diagnostic[] = [];

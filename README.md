@@ -1,13 +1,4 @@
-# line-length-highlighter README
+# line-length-checker README
 
-Will look at all lines, if the length is too high, you will get a cute litle notification
-
-### 0.0.1
-Initial
-
-### 0.0.2
-* removed launch log
-* added number the line that errors
-
-### 0.0.3
-* cleaned up code
+It will check through all files that you have opened.
+if some lines are too long, you will get a warning.
