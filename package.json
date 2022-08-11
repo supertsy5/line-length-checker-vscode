@@ -1,12 +1,12 @@
 {
-	"name": "line-length-highlighter",
-	"displayName": "line_length_highlighter",
-	"description": "Highligts a line when it exeeds a certain length",
-	"version": "0.0.3",
-	"publisher": "nilj",
+	"name": "overlength-checker",
+	"displayName": "Overlength Checker",
+	"description": "Highligths a line when it exceeds a certain length",
+	"version": "0.0.4",
+	"publisher": "supertsy5",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/NikolajLJO/line-length-checker-vscode.git"
+		"url": "https://github.com/supertsy5/overlength-checker.git"
 	},
 	"engines": {
 		"vscode": "^1.49.0"
@@ -19,19 +19,13 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"commands": [
-			{
-				"command": "line-length-highlighter.helloWorld",
-				"title": "Hello World"
-			}
-		],
 		"configuration": {
 			"type": "object",
-			"title": "Max line length",
+			"title": "Maximum line length",
 			"properties": {
 				"line-length-highlighter.lineLength": {
 					"type": "number",
-					"default": 255,
+					"default": 79,
 					"description": "Above what line length should we annoy you?"
 				}
 			}
