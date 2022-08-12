@@ -9,7 +9,14 @@ suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
 
 	test('Sample test', () => {
-		assert.equal(-1, [1, 2, 3].indexOf(5));
-		assert.equal(-1, [1, 2, 3].indexOf(0));
+		let document = vscode.window.activeTextEditor?.document;
+		if(document) {
+			const folder = vscode.workspace.workspaceFolders?.[0];
+			console.log(vscode.languages.match({
+				pattern: new vscode.RelativePattern(
+					folder ?? '**', '*.txt'
+				)
+			}, document));
+		}
 	});
 });
