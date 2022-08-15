@@ -2,7 +2,7 @@
 	"name": "line-length-checker-vscode",
 	"displayName": "Line Length Checker",
 	"description": "Highlights a line when it exceeds a certain length",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"publisher": "supertsy5",
 	"repository": {
 		"type": "git",
@@ -49,6 +49,7 @@
 		}
 	},
 	"scripts": {
+		"pack": "vsce package",
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"lint": "eslint src --ext ts",
