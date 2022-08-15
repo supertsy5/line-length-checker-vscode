@@ -15,7 +15,9 @@
 		"Linters"
 	],
 	"activationEvents": [
-		"*"
+		"onFileSystem:file",
+		"onFileSystem:ssh",
+		"onFileSystem:sftp"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -36,6 +38,12 @@
 						"node_modules/**"
 					],
 					"description": "These files will be skipped."
+				},
+				"line-length-check.workspaceOnly": {
+					"type": "boolean",
+					"default": true,
+					"description":
+					"If true, check only files in the workspace folders."
 				}
 			}
 		}

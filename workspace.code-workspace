@@ -7,8 +7,9 @@
 	"settings": {
 		"typescript.tsc.autoDetect": "off",
 		"line-length-checker.blacklist": [
-			".vscode/**",
 			"tsconfig.json",
+			".git/**",
+			".vscode/**",
 			"node_modules/**",
 			"out/**"
 		]
