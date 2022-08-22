@@ -2,8 +2,8 @@
 	"name": "line-length-checker-vscode",
 	"displayName": "Line Length Checker",
 	"description": "Highlights a line when it exceeds a certain length",
-	"version": "0.1.2",
-	"publisher": "supertsy5",
+	"version": "0.1.3",
+	"publisher": "SUPERTSY5",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/supertsy5/line-length-checker-vscode.git"
@@ -21,6 +21,12 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"commands": [
+			{
+				"command": "line-length-checker.reload",
+				"title": "Line Length Checker: Reload"
+			}
+		],
 		"configuration": {
 			"type": "object",
 			"title": "Line Length Checker",
@@ -39,17 +45,24 @@
 					],
 					"description": "These files will be skipped."
 				},
-				"line-length-check.workspaceOnly": {
+				"line-length-checker.workspaceOnly": {
 					"type": "boolean",
 					"default": true,
 					"description":
-					"If true, check only files in the workspace folders."
+					"Check only files in the workspace folders"
+				},
+				"line-length-checker.level": {
+					"type": "string",
+					"default": "Info",
+					"enum": ["Error", "Warn", "Info", "Hint"],
+					"description": "The severity of diagnostics."
 				}
 			}
 		}
 	},
 	"scripts": {
-		"pack": "vsce package",
+		"pack": "npx vsce package",
+		"publish": "npx vsce publish",
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"lint": "eslint src --ext ts",

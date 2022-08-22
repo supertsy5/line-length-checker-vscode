@@ -1,7 +1,15 @@
 import * as vscode from 'vscode';
-export function activate(context: vscode.ExtensionContext) {
+
+const LEVELS = ['Error', "Warn", "Info", "Hint"];
+
+let disposables: vscode.Disposable[];
+let diagCollection: vscode.DiagnosticCollection;
+
+export function activate() {
 	let config = vscode.workspace.getConfiguration('line-length-checker');
 	let max = config.lineLength as number;
+	let level = LEVELS.indexOf(config.level as string);
+	let workspaceOnly = config.workspaceOnly as boolean;
 	let blacklist = config.blacklist as string[];
 	let blacklistFilters = (
 		vscode.workspace.workspaceFolders?.flatMap(
@@ -9,25 +17,43 @@ export function activate(context: vscode.ExtensionContext) {
 				pattern: new vscode.RelativePattern(folder, pattern)
 			}))
 		) as vscode.DocumentFilter[] ?? []
-	).concat({scheme: 'git'}, {scheme: 'vscode'});
+	).concat({scheme: 'git'}, {scheme: 'vscode'}, {scheme: 'vscode-userdata'});
 	let workspaceFilters = vscode.workspace.workspaceFolders?.map(
 		folder => ({pattern: new vscode.RelativePattern(folder, '*')})
 	);
-	let workspaceOnly = config.workspaceOnly as boolean;
 
-	let collection = vscode.languages.createDiagnosticCollection('overlength');
+	diagCollection = vscode.languages.createDiagnosticCollection('overlength');
 
-	vscode.workspace.onDidChangeTextDocument(event => {
-		if (event.document !== undefined) {
-			checkOverlength(event.document);
-		}
-	});
-	vscode.workspace.onDidOpenTextDocument(document => {
-		checkOverlength(document);
-	});
 	vscode.workspace.textDocuments.forEach(document => {
 		checkOverlength(document);
 	});
+
+	disposables = [
+		vscode.commands.registerCommand('line-length-checker.reload', reload),
+		vscode.workspace.onDidChangeTextDocument(event => {
+			if (event.document !== undefined) {
+				checkOverlength(event.document);
+			}
+		}),
+		vscode.workspace.onDidOpenTextDocument(document => {
+			checkOverlength(document);
+		})
+	];
+
+	function reload() {
+		const config = vscode.workspace.getConfiguration(
+			'line-length-checker'
+		);
+		max = config.lineLength;
+		workspaceOnly = config.workspaceOnly;
+		blacklist = config.blacklist;
+		level = LEVELS.indexOf(config.level);
+		console.log(level);
+		diagCollection.clear();
+		vscode.workspace.textDocuments.forEach(document => {
+			checkOverlength(document);
+		});
+	}
 
 	function checkOverlength(
 		document: vscode.TextDocument
@@ -37,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
 				workspaceOnly && workspaceFilters
 				&& !vscode.languages.match(workspaceFilters, document)
 			) || vscode.languages.match(blacklistFilters, document)
-			) {
+		) {
 			console.log("Skipped: " + document.uri.toString());
 			return;
 		}
@@ -58,12 +84,17 @@ export function activate(context: vscode.ExtensionContext) {
 							new vscode.Position(i, rawLength)
 						),
 						`Overlength line: ${length} columns`,
-						vscode.DiagnosticSeverity.Warning
+						level
 					)
 				);
 			}
 			i++;
 		}
-		collection.set(document.uri, diags);
+		diagCollection.set(document.uri, diags);
 	}
+}
+
+export function deactivate() {
+	diagCollection.clear();
+	disposables.forEach(disp => disp.dispose());
 }
