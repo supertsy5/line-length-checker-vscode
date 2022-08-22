@@ -19,7 +19,7 @@ export function activate() {
 		) as vscode.DocumentFilter[] ?? []
 	).concat({scheme: 'git'}, {scheme: 'vscode'}, {scheme: 'vscode-userdata'});
 	let workspaceFilters = vscode.workspace.workspaceFolders?.map(
-		folder => ({pattern: new vscode.RelativePattern(folder, '*')})
+		folder => ({pattern: new vscode.RelativePattern(folder, '**')})
 	);
 
 	diagCollection = vscode.languages.createDiagnosticCollection('overlength');
@@ -60,8 +60,8 @@ export function activate() {
 	) {
 		if(
 			(
-				workspaceOnly && workspaceFilters
-				&& !vscode.languages.match(workspaceFilters, document)
+				(workspaceOnly && workspaceFilters
+				&& !vscode.languages.match(workspaceFilters, document))
 			) || vscode.languages.match(blacklistFilters, document)
 		) {
 			console.log("Skipped: " + document.uri.toString());
